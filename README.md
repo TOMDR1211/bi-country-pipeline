@@ -1,99 +1,80 @@
+# 🛰️ BI Automation to BigQuery
 
-# BI Country Data Pipeline 🌍
-
-This project extracts, transforms, and loads (ETL) country profile data from the [REST Countries API](https://restcountries.com) into Google BigQuery. The data is modeled into meaningful dimension and fact tables for analytics purposes.
+ETL pipeline written in Python that pulls data from the [RESTCountries API](https://restcountries.com/), processes it with `pandas`, and loads it into Google BigQuery.
 
 ---
 
 ## 📁 Project Structure
 
 ```
-Python BI Automation to BigQuery/
-│
+.
 ├── app/
-│   ├── main.py                # Main ETL pipeline logic
-│   ├── api_connector.py       # API connection and normalization
-│   └── load_bq.py             # Loads final DataFrames to BigQuery
-│
-├── data/
-│   ├── raw/                   # Backup of raw JSON data
-│   └── process/               # (Optional) space for transformed files
+│   ├── api_connector.py     # Pulls data from the REST API
+│   ├── main.py              # Handles transformation and DataFrame creation
+│   └── load_bq.py           # Loads processed data into BigQuery
 │
 ├── credentials/
-│   └── BigQuery/              # GCP service account JSON
+│   └── BigQuery/            # Holds the service account key (not pushed)
 │
-├── .env                       # Environment variables (see below)
-├── requirements.txt           # Python dependencies
-└── README.md                  # You're here!
+├── .env                     # Environment variables (ignored in .gitignore)
+├── .gitignore
+├── README.md
+└── requirements.txt
 ```
 
 ---
 
-## ⚙️ Environment Configuration (`.env`)
+## 🧰 Tech Stack
 
-The project uses `python-dotenv` to load sensitive variables. Your `.env` file should include:
-
-```env
-GOOGLE_APPLICATION_CREDENTIALS=credentials/BigQuery/<your-json>.json
-GCP_PROJECT_ID=bi-country-data-pipeline
-GCP_DATASET=dim_fact_restcountries
-BQ_DATASET_ID=bi-country-data-pipeline.dim_fact_restcountries
-```
+- **Python**: `pandas`, `pandas-gbq`, `python-dotenv`
+- **BigQuery**: Google Cloud project with service account authentication
 
 ---
 
-## 🔄 ETL Process Overview
+## 🔑 Setup
 
-### 🔹 Extraction
-Data is pulled using `requests.get()` from:
-```
-https://restcountries.com/v3.1/all
-```
+1. **Clone the repo**  
+   ```bash
+   git clone https://github.com/TOMDR1211/bi-country-pipeline.git
+   cd bi-country-pipeline
+   ```
 
-### 🔹 Transformation
-Using `pandas` and `json_normalize`:
-- Nested fields are flattened
-- Key columns extracted: languages, lat/lng, capital, gini, etc.
-- Several fact/dim tables created
+2. **Create and activate virtual environment**  
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # or venv\Scripts\activate on Windows
+   ```
 
-### 🔹 Load
-Each final DataFrame is loaded to BigQuery via `pandas_gbq.to_gbq()` with `if_exists="replace"`.
+3. **Install dependencies**  
+   ```bash
+   pip install -r requirements.txt
+   ```
 
----
-
-## 🧱 Final Tables in BigQuery
-
-| Table Name                    | Description                                  |
-|------------------------------|----------------------------------------------|
-| `df_country_media`           | URLs for flags, maps, and coat of arms       |
-| `df_countries`               | Country name and capital                     |
-| `df_languages`               | Country-to-language breakdown                |
-| `df_fct_state_profile`       | Area, population, borders, lat/lng, density  |
-| `df_fct_state_gini`          | GINI index by country and year               |
+4. **Set up environment variables in `.env`**  
+   ```env
+   GCP_PROJECT_ID=your-project-id
+   BQ_DATASET_ID=your-dataset-id
+   GOOGLE_APPLICATION_CREDENTIALS=path/to/your/credentials.json
+   ```
 
 ---
 
-## ▶️ How to Run
+## 🚀 Run
 
 ```bash
-# Install dependencies
-pip install -r requirements.txt
-
-# Run ETL & load
-python app/load_bq.py
+python app/main.py       # Pull + Transform
+python app/load_bq.py    # Load to BigQuery
 ```
 
 ---
 
-## 🧠 Ideas for Next Steps
+## 📌 Notes
 
-- Add logging and error handling
-- Automate via Airflow / Cloud Functions
-- Versioning strategy for changing schemas
-- Implement unit tests for API + transformation
+- The `.gitignore` prevents credentials and sensitive files from being tracked.
+- All data transformations are done with `pandas` prior to upload.
 
 ---
 
-## 📌 Author
+## 📄 License
 
-Created by [תום] as a learning project to automate ETL into BigQuery and improve cloud-based BI workflows.
+MIT License
