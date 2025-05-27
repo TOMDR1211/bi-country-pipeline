@@ -29,6 +29,6 @@ tbl_dst_fct_c_gini=f"{dataset_id}.df_fct_state_gini"
 
 to_gbq(dim_country_media,destination_table=table_dest_urls,project_id=project_id,if_exists="replace")
 to_gbq(df_country,destination_table=table_dest_countries,project_id=project_id,if_exists="replace")
-to_gbq(df_country,destination_table=tbl_dst_lagn,project_id=project_id,if_exists="replace")
-to_gbq(df_country,destination_table=tbl_dst_fct_c_profile,project_id=project_id,if_exists="replace")
-to_gbq(df_country,destination_table=tbl_dst_fct_c_gini,project_id=project_id,if_exists="replace")
+to_gbq(df_langages,destination_table=tbl_dst_lagn,project_id=project_id,if_exists="replace")
+to_gbq(fact_country_profile,destination_table=tbl_dst_fct_c_profile,project_id=project_id,if_exists="replace")
+to_gbq(fact_country_gini,destination_table=tbl_dst_fct_c_gini,project_id=project_id,if_exists="replace")
